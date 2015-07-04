@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [ -z "$VIRTUAL_ENV" ]; then
+    echo "Warning: not running in a virtual environment."
+fi
+
+TYPE="$1" python main.py

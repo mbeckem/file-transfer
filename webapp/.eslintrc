@@ -1,0 +1,23 @@
+{
+  "ecmaFeatures": {
+    "jsx": true,
+    "modules": true
+  },
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "comma-dangle": 0,
+    "no-shadow": 0,
+    "no-console": 0,
+    "eqeqeq": 2,
+    "no-use-before-define": [2, "nofunc"],
+    "react/jsx-uses-vars": 2,
+    "react/jsx-no-undef": 2,
+    "react/no-unknown-property": 2,
+  }
+}

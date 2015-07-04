@@ -1,0 +1,20 @@
+.content {
+    max-width: 600px;
+    margin: auto;
+}
+
+.download-link {
+    text-align: center;
+    font-family: Menlo, Monaco, Consolas, Liberation Mono, DejaVu Sans Mono, "Courier New", monospace;
+    font-weight: 700;
+    font-size: 2em;
+}
+
+.upload-status {
+
+}
+
+.upload-status > .buttons {
+    text-align: center;
+    margin-top: 1em;
+}

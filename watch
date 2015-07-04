@@ -1,0 +1,39 @@
+#!/bin/bash
+#
+# The "watch" script watches the project's source directory
+# and executes "make" whenever a file inside it changes.
+# Note that "watch" produces a build for debugging (DEBUG=1).
+# Use make clean && make to produce a release build instead.
+
+indent() {
+    sed 's/^/  /';
+}
+
+build() {
+    make -s debug 2>&1 | indent;
+    return ${PIPESTATUS[0]};
+}
+
+lint() {
+    make -s lint 2>&1 | indent;
+    return ${PIPESTATUS[0]};
+}
+
+echo "Watching the project directory for changes"
+while true; do
+    # Watch all files and folders, but ignore .git, node_modules and $DIST_DIR.
+    inotifywait -e modify,create,delete,move,attrib -rqq "." "@./.git" "@./node_modules" "@./$DIST_DIR" "@./$BUILD_DIR" > /dev/null
+    echo ""
+    echo "Working directory changed ... "
+
+    if build ; then
+        echo "Build OK."
+        if lint ; then
+            echo "Lint OK."
+        else
+            echo "Lint failed."
+        fi
+    else
+        echo "Build failed."
+    fi
+done
