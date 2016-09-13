@@ -32,6 +32,7 @@ def sanitize_filename(name):
 
 
 class Session:
+    """A session represents a single in-progress file upload."""
 
     def __init__(self, id, file):
         self.id = id
@@ -86,6 +87,10 @@ class Session:
         finally:
             self.done_event.set()
 
+    # The status connection uses a websocket to update
+    # the uploading user's website.
+    # The user will receive progress events such as
+    # the number of written bytes and errors.
     @asyncio.coroutine
     def status_response(self, request):
         if self.timed_out or self.status_future.done():
@@ -150,6 +155,10 @@ class Session:
 
         return ws
 
+    # The upload connection receives as file via POST request
+    # and registers it with the sessions main coroutine.
+    # This coroutine waits until the transfer is complete and then
+    # replies with "Ok".
     @asyncio.coroutine
     def upload_response(self, request):
         if self.timed_out or self.upload_future.done():
@@ -162,6 +171,10 @@ class Session:
         logger.debug("Session %s: upload done", self.id)
         return web.HTTPOk(text="Ok")
 
+    # The download connection is used by the receiver of the file
+    # to download the file via HTTP. The request is registered
+    # with the main coroutine and this coroutine waits until the transfer is
+    # complete.
     @asyncio.coroutine
     def download_response(self, request):
         if self.timed_out or self.download_future.done():
@@ -186,6 +199,8 @@ class Session:
 
     _READ_SIZE = 256 * 1024
 
+    # Copies the file from the upload to the download connection
+    # and notifies the status_channel about any progress made.
     @asyncio.coroutine
     def _copy(self, upload_request, download_response, status_channel):
         reader = upload_request.content

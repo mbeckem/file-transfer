@@ -1,13 +1,20 @@
 import asyncio
 import collections
 
+# Raised when a nonblocking get is attempted on an empty Channel.
+
 
 class ChannelEmpty(Exception):
     pass
 
+# Raised when an operation is attempted on a closed Channel.
+
 
 class ChannelClosed(Exception):
     pass
+
+# A Channel is an asynchronous queue for communication
+# between two or more coroutines.
 
 
 class Channel:
